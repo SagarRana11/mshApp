@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Archivo-Italic-VariableFont_wdth,wght.ttf",
+      "sha1": "4064738ae100f5b61a4091a63155372434c41080"
+    },
+    {
+      "path": "assets/fonts/Archivo-VariableFont_wdth,wght.ttf",
+      "sha1": "ca8d0eb369457af35e6d1595a43ab7136f7e4619"
+    },
+    {
+      "path": "assets/fonts/Exo2-Italic-VariableFont_wght.ttf",
+      "sha1": "1c1e19741696d969889123c74cbc742f1fe46b94"
+    },
+    {
+      "path": "assets/fonts/Exo2-VariableFont_wght.ttf",
+      "sha1": "7c73c76228003005ddc697b1e820e73bf53a8df0"
+    },
+    {
+      "path": "assets/fonts/MavenPro-VariableFont_wght.ttf",
+      "sha1": "69ef582ab7c1d20c372350691f479a0396430f11"
+    }
+  ]
+}

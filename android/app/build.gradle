@@ -105,12 +105,15 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    project.ext.vectoricons = [
+    iconFontNames: [ "MaterialCommunityIcons.ttf", "FontAwesome.ttf", "Ionicons.ttf" ] // Add any fonts you need
+]
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
+    implementation project(':react-native-vector-icons')
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
