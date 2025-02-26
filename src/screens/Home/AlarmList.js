@@ -3,16 +3,13 @@ import { FlatList, Text, ActivityIndicator, View, Button, ScrollView, Alert, Sty
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchRequests } from "../../services";
 import CalcificCard from "../../components/Card";
-import MedicalCaseCard from "../../components/TrialCard";
-import MadicaCaseCard2 from '../../components/TrialCard2'
-import MadicaCaseCard3 from '../../components/TrialCard3'
-import MadicaCaseCard4 from '../../components/Trialcard4'
-import MadicaCaseCard5 from '../../components/TrailCard5'
+
 import {logout} from "../../services";
 import { useNavigate } from "react-router-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "react-native-paper";
+import {LinearGradient} from 'react-native-linear-gradient'
 
 const AlarmList = () => {
   const {
@@ -63,22 +60,29 @@ const AlarmList = () => {
       //  <SafeAreaView style={{flex:1}}>
       //     <SafeAreaProvider>
               <View style={{ flex: 1, justifyContent:'center', alignItems:'center' }}>
-                <View style={styles.header}>
-                   <View style={styles.AlarmHistory}> 
-                      <Icon source="message-text" size={28} color="black" />
+                  <LinearGradient 
+                    colors={['#90d6fe', '#f7fcfe', 'white']} // Three colors
+                    locations={[0, 0.90, 1]} // First color at 0%, Second at 50%, Third at 100%
+                    start={{ x: 0, y: 0 }} 
+                    end={{ x: 0, y: 1 }} 
+                    style={[styles.container, styles.header]}
+                  >
+                    <View style={styles.AlarmHistory}> 
+                      <Icon source="message-text-outline" size={28} color="black" />
                       <Text style={{fontSize:25, fontWeight:600,}}>Alarm History </Text>
-                      <Icon source="bell" size={28} color="black" style={styles.chatIcon} />
+                      <Icon source="bell-outline" size={28} color="black" style={styles.chatIcon} />
                    </View>
                    <View style={styles.searchBox}>
                      <Icon source="magnify" size={28} color="" style={styles.chatIcon} /> 
-                     <TextInput  style={styles.textInput}/>
+                     <TextInput placeholder="search"  style={styles.textInput}/>
                    </View>
-                </View>
+                 </LinearGradient>
+                   
                 <FlatList
-                  contentContainerStyle={{ flexGrow: 1, paddingTop:160 }} 
+                  contentContainerStyle={{ flexGrow: 1, paddingTop:160, backgroundColor:'white' }} 
                   data={requests}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => <MadicaCaseCard4 />}
+                  renderItem={({ item }) => <CalcificCard item={item}/>}
                   onEndReached={() => {
                     console.log("End reached! Fetching more...");
                     if (hasNextPage) {
@@ -106,8 +110,7 @@ const styles = StyleSheet.create({
     paddingTop:20,
     justifyContent: 'center',
     alignItems:'center',
-    borderBottomWidth:.4,
-    borderBottomColor:'green',
+
     position:'absolute',
     zIndex:10,
     top:0,
@@ -130,18 +133,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 10,
-    width: "95%",
+    paddingLeft: 20,
+    width: "90%",
     borderRadius: 20,
     marginBottom: 20,
-    padding: 2,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    padding: 5,
+    borderWidth: 2,
+    borderColor: '#4fbfff',
     backgroundColor: '#fff',
   },
   
   textInput:{
     width:'95%',
+    fontSize:18,
+    padding:5,
+    paddingLeft:10,
   }
 })
 

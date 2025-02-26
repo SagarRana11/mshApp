@@ -1,6 +1,13 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text,View,Image, StyleSheet,  Button, Pressable, TouchableOpacity, Linking,ImageBackground,KeyboardAvoidingView,TouchableWithoutFeedback, Platform, Keyboard } from 'react-native'
 import { TextInput } from 'react-native-paper';
+import { useFormik } from 'formik';
+import * as Yup from 'yup'
+import { login } from '../../services'
+import { useNavigate } from 'react-router-native';
+import { useMutation } from '@tanstack/react-query';
+import {LinearGradient} from 'react-native-linear-gradient'
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import icon
 const Link =()=>{
   const handlePress=(url)=> Linking.openURL(url);
@@ -25,41 +32,170 @@ const ShowError=({errorTextMessage})=>{
     </Text>
   )
 }
-const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); 
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('')
+const LoginFormFake = () => {
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    const doesUserExists = async()=>{
+      try {
+        const token = await AsyncStorage.getItem('loggedUserToken');
+        console.log('token--------->', token)
+        if(token){
+          navigate('/home')
+        }
+      } catch (error) {
+        console.error("error", error)
+      }
+
+    }
+    doesUserExists()
+  },[])
+
+  // useEffect(()=>{
+  //   const logout =async()=>{
+  //     await AsyncStorage.removeItem('loggedUserToken');
+  //   }
+  //   logout()
+  // },[])
+
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [validEmail, setValidEmail] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+        .email("Invalid email address")
+        .required('Required'),
+    password:Yup.string()
+        .min(4, "Password must be six character long")   
+        .required('Required') 
+  })
 
 
-  const validateEmail = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!email){
-      setEmailError('please enter your email id ')
-      return
-    }
-    if (!emailRegex.test(email)) {
-      setEmailError('Invalid email format');
-      setValidEmail(false)
-    } else {
-      setEmailError('');
-      setValidEmail(true);
-    }
-  };
+    const loginMutation = useMutation({
+        mutationFn: async (values) => {
+           return await login(values); // Call your login API
+        },
+        onSuccess: (data) => {
+           console.log("Login successful:", data);
+           navigate("/home"); // Navigate to home screen after login
+        },
+        onError: (error) => {
+           console.error("Login failed:", error);
+        }
+    });
 
-  const validatePassword =()=>{
-    if(!password){
-      setPasswordError('Please enter your password')
-      return
-    }else{
-      setPasswordError('');
-    }
-  }
+
+  const formik = useFormik({
+    initialValues:{
+        email:'',
+        password:''
+    },
+    onSubmit: (values) => {
+        loginMutation.mutate(values); // Call mutation on submit
+    },
+    validationSchema,
+  })
+  return(
+    <LinearGradient
+      colors={['white','#a8e2fd']} 
+      locations={[0, 1]}
+      style={[styles.gradient,styles.background ]}
+      start={{ x: 0, y: 0 }} // Start from left (0)
+      end={{ x: 1, y: 0 }}   // End at right (1)
+    >
+      <KeyboardAvoidingView style={{width:'100%'}}
+         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+
+            <View style={styles.displaylogo}>
+              <Image 
+                  source={require('../../../assets/images/navHeaderLogo.png')}
+                  resizeMode='contain'
+                  style={{width:'120%'}}
+                />
+            </View>   
+            <View style={styles.formContainer}>
+            
+              <View style={styles.welcomeBox}>
+                <Text style={{fontSize:35,fontFamily:'Exo2-Italic-VariableFont_wght', color:'black',marginBottom:5}}>Welcome Back</Text>
+                <Text style={{marginBottom:4, marginBottom:15, fontSize:18, color:'gray'}}>Sign in to continue</Text>
+              </View>
+
+              <View style={styles.loginForm}>
+               
+                <TextInput 
+                  value={formik.values.email}
+                  label='email'
+                  placeholder='enter your email'
+                  mode='outlined'
+                  outlineColor='#67c9fd'
+                  activeOutlineColor="#67c9fd" 
+                  onBlur={formik.handleBlur('email')}
+                  onChangeText={formik.handleChange('email')}
+                  style={[styles.textInput,{width:'95%'}]}
+                  theme={{
+                    colors: {
+                      onSurfaceVariant: 'gray',
+                      // Placeholder color
+                    }
+                  }}
+                  right={
+                    <TextInput.Icon
+                      icon={formik.values.email && !formik.errors.email && "check"}
+                      color='#67c9fd'
+                    />
+                  }
+                />
+                {formik.touched.email && formik.errors.email && <ShowError errorTextMessage={formik.errors.email} />}
+                {/* {emailError && <ShowError errorTextMessage={emailError} />} */}
+
+                <TextInput 
+                  value={formik.values.password}
+                  label='password'
+                  mode='outlined'
+                  placeholder='enter your password'
+                  outlineColor='#67c9fd'
+                  activeOutlineColor="#67c9fd" 
+                  theme={{
+                    colors: {
+                      onSurfaceVariant: 'gray',
+                      // Placeholder color
+                    }
+
+                  }}
+                  onChangeText={formik.handleChange('password')}
+                  style={[styles.textInput,{width:'95%',color:'green'}]}
+                  onBlur={formik.handleBlur('password')}
+                  secureTextEntry={!passwordVisible}
+                  right={
+                    <TextInput.Icon
+                      icon={passwordVisible ? "eye-off" : "eye"}
+                      onPress={() => setPasswordVisible(!passwordVisible)}
+                    />
+                  }
+                /> 
+                {formik.touched.password && formik.errors.password && <ShowError errorTextMessage={formik.errors.password} />}
+                <Pressable style={styles.loginButton} onPress={formik.handleSubmit}>
+                  <Text style={{color:'black', fontSize:18}}>Login</Text>
+                </Pressable>
+
+                <Link/>
+              </View>  
+
+            </View> 
+
+          </View>
+
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+
+    </LinearGradient>
+  )
+  
   return (
     <ImageBackground
-      source={require('../../assets/images/imageBack6.jpg')} 
+      source={require('../../../assets/images/imageBack6.jpg')} 
       style={styles.background}
     >
       <KeyboardAvoidingView style={{width:'100%'}}
@@ -70,7 +206,7 @@ const LoginForm = () => {
 
             <View style={styles.displaylogo}>
               <Image 
-                  source={require('../../assets/images/navHeaderLogo.png')}
+                  source={require('../../../assets/images/navHeaderLogo.png')}
                   resizeMode='contain'
                   style={{width:'120%'}}
                 />
@@ -78,20 +214,21 @@ const LoginForm = () => {
             <View style={styles.formContainer}>
             
               <View style={styles.welcomeBox}>
-                <Text style={{fontSize:35,fontFamily:'Exo2-Italic-VariableFont_wght', color:'#2E8B57',marginBottom:5}}>Welcome Back</Text>
+                <Text style={{fontSize:35,fontFamily:'Exo2-Italic-VariableFont_wght', color:'#3CB371',marginBottom:5}}>Welcome Back</Text>
                 <Text style={{marginBottom:4, marginBottom:15, fontSize:18, color:'gray'}}>Sign in to continue</Text>
               </View>
 
               <View style={styles.loginForm}>
+               
                 <TextInput 
-                  value={email}
+                  value={formik.values.email}
                   label='email'
                   placeholder='enter your email'
                   mode='outlined'
                   outlineColor='green'
                   activeOutlineColor="green" 
-                  onBlur={validateEmail}
-                  onChangeText={setEmail}
+                  onBlur={formik.handleBlur('email')}
+                  onChangeText={formik.handleChange('email')}
                   style={[styles.textInput,{width:'95%'}]}
                   theme={{
                     colors: {
@@ -101,17 +238,16 @@ const LoginForm = () => {
                   }}
                   right={
                     <TextInput.Icon
-                      icon={validEmail? "check" : ""}
+                      icon={formik.values.email && !formik.errors.email && "check"}
                       color='green'
-                      onPress={() => setPasswordVisible(!passwordVisible)}
                     />
                   }
                 />
-
-                {emailError && <ShowError errorTextMessage={emailError} />}
+                {formik.touched.email && formik.errors.email && <ShowError errorTextMessage={formik.errors.email} />}
+                {/* {emailError && <ShowError errorTextMessage={emailError} />} */}
 
                 <TextInput 
-                  value={password}
+                  value={formik.values.password}
                   label='password'
                   mode='outlined'
                   placeholder='enter your password'
@@ -124,9 +260,9 @@ const LoginForm = () => {
                     }
 
                   }}
-                  onChangeText={setPassword}
+                  onChangeText={formik.handleChange('password')}
                   style={[styles.textInput,{width:'95%',color:'green'}]}
-                  onBlur={validatePassword}
+                  onBlur={formik.handleBlur('password')}
                   secureTextEntry={!passwordVisible}
                   right={
                     <TextInput.Icon
@@ -135,9 +271,8 @@ const LoginForm = () => {
                     />
                   }
                 /> 
-                {passwordError && <ShowError errorTextMessage={passwordError} />}
-
-                <Pressable style={styles.loginButton} title='Login' >
+                {formik.touched.password && formik.errors.password && <ShowError errorTextMessage={formik.errors.password} />}
+                <Pressable style={styles.loginButton} onPress={formik.handleSubmit}>
                   <Text style={{color:'white', fontSize:18}}>Login</Text>
                 </Pressable>
 
@@ -158,6 +293,7 @@ const LoginForm = () => {
 }
 
 const styles = StyleSheet.create({
+  gradient:{flex:1},
   background: {
     flex: 1,
     resizeMode: 'cover', // cover, contain, stretch
@@ -192,7 +328,7 @@ const styles = StyleSheet.create({
     marginLeft:10,
   }, 
   hospitalName:{
-    fontFamily : 'Exo2-VariableFont_wght',
+    fontFamily : 'Poppins-LightItalic',
     fontWeight:600,
     fontSize: 35,
   },
@@ -235,7 +371,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     width: '95%',
     height:50,
-    backgroundColor: '#2E8B57',
+    backgroundColor: '#67c9fd',
     marginTop:20,
     marginBottom: 50,
     borderRadius: 5,
@@ -259,4 +395,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default LoginForm;
+export default LoginFormFake;

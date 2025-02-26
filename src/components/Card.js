@@ -1,41 +1,264 @@
-import * as React from 'react';
-import { Avatar, Button, Card, Text } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity, Touchable } from "react-native";
+import { Card, Text, Button, Chip, Icon } from "react-native-paper";
+import moment from "moment";
+import fontTheme from "../theme/fonttheme";
 
-const rightContent = props =><View style={styles.statusbar}><Text style={styles.statusStyles}>Active</Text></View> 
+const HospitalCaseCard = ({item}) => {
 
 
-const CalcificCard = () => (
-  <Card>
-    <Card.Title title="Mount Sinai Queens" subtitle="Card Subtitle" right={rightContent}  />
-    <Card.Content>
-      <Text variant="titleLarge">Card title</Text>
-      <Text variant="bodyMedium">Card content</Text>
-    </Card.Content>
-    <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-    <Card.Actions>
-      <Button>Cancel</Button>
-      <Button>Ok</Button>
-    </Card.Actions>
-  </Card>
-);
+  const [elapsedTime, setElapsedTime] = useState(moment().diff(moment(item.alarm_raise_on), 'seconds'));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedTime(moment().diff(moment(item.alarm_raise_on), 'seconds'));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds) => {
+    const duration = moment.duration(seconds, 'seconds');
+    return `${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
+  };
+
+  return (
+    <Card style={styles.card}>
+       <View style={{ backgroundColor: "#dcf1fd"}}>
+            <View style={styles.headerBackground}>
+                <Text style={[styles.hospitalName, {fontFamily: 'MavenPro-VariableFont_wght',}]}>{item.location.fullName}</Text>
+                <TouchableOpacity style={styles.touchableStyle}>
+                  <Icon source="message-text-outline" size={30} color="#000000"  />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.touchableStyle}>
+                  <Icon  source="video-outline" size={30} color="#000000"  />
+                </TouchableOpacity>
+            </View>
+              <View style={styles.statusWithTimer}>
+                  <View style={[styles.statusContainer, {color:'black'}]}>
+                    <Text style={{fontFamily:"Poppins-Italic",fontSize:13}}>
+                      {item.status}
+                    </Text>
+                  </View>
+                 
+                  <View style={styles.timerContainer}>
+                    <Icon source="timer" size={13} color="red" style={styles.iconTimer} />
+                    <Text style={styles.timer}>{formatTime(elapsedTime)}</Text>
+                  </View>
+              </View>
+              
+       </View>
+     
+      <Card.Content style={styles.cardContent}>
+       
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailRow}>
+            <Icon source="clipboard-outline" size={20} color="gray" />
+            <Text style={styles.detail}><Text style={styles.bold}>Case ID: </Text> {item.case_id}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Icon source="phone-outline" size={20} color="gray" />
+            <Text style={styles.detail}><Text style={styles.bold}>Contact No: </Text> {item.phone_number}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Icon source="alarm" size={20} color="gray" />
+            <Text style={styles.detail}><Text style={styles.bold}>Alarm Raised On: </Text> {moment(item.alarm_raise_on).format("DD MMM YYYY, hh:mm A")}</Text>
+          </View>
+          {item.accepted_by &&
+            <View style={styles.detailRow}>
+             <Icon source="account-outline" size={20} color="gray" />
+             <Text style={styles.detail}><Text style={styles.bold}>Accepted By: </Text> {item.accepted_by.name || "N/A"}</Text>
+           </View>
+          }
+         
+        </View>
+      </Card.Content>
+      <Card.Actions style={styles.actions}>
+      <View style={styles.shadowWrapper}> 
+        <Button
+          mode="contained"
+          icon="plus"
+          labelStyle={styles.label}
+          contentStyle={styles.buttonContent}
+          buttonColor="#cde3fb"
+          textColor="#000000"
+          onPress={() => console.log("Chat Pressed")}
+        >
+          Add Details
+        </Button>
+      </View>
+      <View style={styles.shadowWrapper}> 
+        <Button
+          mode="contained"
+          icon="eye"
+          labelStyle={styles.label}
+          contentStyle={styles.buttonContent}
+          buttonColor="#cde3fb"
+          textColor="#000000"
+          onPress={() => console.log("Chat Pressed")}
+        >
+          View Details
+        </Button>
+      </View>
+
+      </Card.Actions>
+    </Card>
+  );
+};
 
 const styles = StyleSheet.create({
-    statusbar:{
-        backgroundColor:'orange',
-        width:100,
-        height:25,
-        justifyContent:'center',
-        alignItems:'center',
-        borderRadius:15,
-        marginRight:10
+  card: {
+    margin: 10,
+    width:'95%',
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 0,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    overflow: "hidden",
+  },
+  cardContent: {
+    paddingHorizontal: 10,
+    width: "100%",
+  },
+  headerBackground: {
+    flexDirection: "row",
+    alignItems: "center",
+    color:'#d5f4d6 ',
+    paddingTop:7,
+    padding: 5,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    width: "100%",
+  },
+  hospitalName: {
+    fontSize: 23,
+    color:'#000000',
+    marginLeft: 5,
+    flex: 1,
+  },
+  chatIcon: {
+    marginLeft: "auto",
+  },
+  // statusRow: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent:'space-between',
+  //   marginBottom: 10,
+  //   paddingBottom:5,
+  //   width: "100%",
+  // },
+  statusWithTimer: {
+    // paddingLeft:12,
+    padding:5,
+    paddingLeft:13,
+    paddingBottom:5,
+    flexDirection: "row",
+    justifyContent:'',
+    alignItems: "center",
+    gap: 10,
+  },
+  statusChip: {
+    backgroundColor: "white",
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    height:30,
+    justifyContent:'center',
+    alignItems: 'center'
+  },
+  statusText: {
+    color: "#2E8B57",
+    fontFamily:"Poppins-SemiBold",
+    fontWeight: "bold",
+    padding:3,
+    fontSize: 12,
+  },
+  iconTimer:{
+     backgroundColor:'white'
+  },
+  statusContainer: {
+    backgroundColor:'#eafeed',
+    borderRadius:15,
+    padding:2,
+    paddingLeft:10,
+    paddingRight:10,
+    flexDirection: "row",
+    justifyContent:'center',
+    alignItems: "center",
+    shadowColor: "#A8E6A2",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
 
-    },
-    statusStyles:{
-        fontSize:18,
-        color:'white    '
-    }
-})
+  },
+  timerContainer: {
+    backgroundColor:'#fbdcdc',
+    padding:3,
+    paddingRight:7,
+    borderRadius:15,
+    flexDirection: "row",
+    justifyContent:'center',
+    alignItems: "center",
+    shadowColor: "#A8E6A2",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  timer: {
+    fontSize: 13,
+    color: "red",
+    marginLeft: 5,
+  },
+  detailsContainer: {
+    marginTop: 15,
+    marginBottom:5,
+    width: "100%",
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 3,
+  },
+  detail: {
+    fontSize: 17,
+    color: "#263238",
+    marginLeft: 8,
+    fontFamily: "Poppins-Light",
+  },
+  bold: {
+    color:'gray'
+  },
+  actions: {
+    width:'100%',
+    flexDirection: "row",
+    borderTopWidth:1,
+    borderTopColor:'#D3D3D3',
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+  },
+  touchableStyle:{
+    paddingRight:10,
+    paddingLeft:10,
+  },
+  button:{
+    shadowColor: "#A8E6A2",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  shadowWrapper: {
+    elevation: 1, // Required for Android shadows
+    borderRadius: 20, // Ensure smooth shadow edges
+  },
+  label:{ fontSize: 17, fontFamily:'Poppins-Light' }
 
-export default CalcificCard;
+});
+
+
+export default HospitalCaseCard;
 
