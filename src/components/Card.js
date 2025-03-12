@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Touchable } from "react-native";
 import { Card, Text, Button, Chip, Icon } from "react-native-paper";
 import moment from "moment";
+import { moderateScale } from "../utils/normalize";
 import fontTheme from "../theme/fonttheme";
-
-const HospitalCaseCard = ({item}) => {
-
-
+const HospitalCaseCard = ({item, navigation}) => {
   const [elapsedTime, setElapsedTime] = useState(moment().diff(moment(item.alarm_raise_on), 'seconds'));
 
   useEffect(() => {
@@ -23,7 +21,7 @@ const HospitalCaseCard = ({item}) => {
 
   return (
     <Card style={styles.card}>
-       <View style={{ backgroundColor: "#dcf1fd"}}>
+       <View style={{ backgroundColor: "white"}}>
             <View style={styles.headerBackground}>
                 <Text style={[styles.hospitalName, {fontFamily: 'MavenPro-VariableFont_wght',}]}>{item.location.fullName}</Text>
                 <TouchableOpacity style={styles.touchableStyle}>
@@ -35,7 +33,7 @@ const HospitalCaseCard = ({item}) => {
             </View>
               <View style={styles.statusWithTimer}>
                   <View style={[styles.statusContainer, {color:'black'}]}>
-                    <Text style={{fontFamily:"Poppins-Italic",fontSize:13}}>
+                    <Text style={{fontFamily:"Poppins-Italic",fontSize: moderateScale(13)}}>
                       {item.status}
                     </Text>
                   </View>
@@ -79,11 +77,11 @@ const HospitalCaseCard = ({item}) => {
           icon="plus"
           labelStyle={styles.label}
           contentStyle={styles.buttonContent}
-          buttonColor="#cde3fb"
-          textColor="#000000"
-          onPress={() => console.log("Chat Pressed")}
+          buttonColor="#2978A0"
+          textColor="white"
+          onPress={() => navigation.navigate('ScreenC')}
         >
-          Add Details
+          Add   
         </Button>
       </View>
       <View style={styles.shadowWrapper}> 
@@ -92,9 +90,9 @@ const HospitalCaseCard = ({item}) => {
           icon="eye"
           labelStyle={styles.label}
           contentStyle={styles.buttonContent}
-          buttonColor="#cde3fb"
-          textColor="#000000"
-          onPress={() => console.log("Chat Pressed")}
+          buttonColor="#2978A0"
+          textColor="white"
+          onPress={() => navigation.navigate('ViewPatientDetails')}
         >
           View Details
         </Button>
@@ -133,7 +131,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   hospitalName: {
-    fontSize: 23,
+    fontSize: moderateScale(23),
     color:'#000000',
     marginLeft: 5,
     flex: 1,
@@ -172,7 +170,7 @@ const styles = StyleSheet.create({
     fontFamily:"Poppins-SemiBold",
     fontWeight: "bold",
     padding:3,
-    fontSize: 12,
+    fontSize: moderateScale(12),
   },
   iconTimer:{
      backgroundColor:'white'
@@ -208,7 +206,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   timer: {
-    fontSize: 13,
+    fontSize: moderateScale(13),
     color: "red",
     marginLeft: 5,
   },
@@ -223,7 +221,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   detail: {
-    fontSize: 17,
+    fontSize: moderateScale(17),
     color: "#263238",
     marginLeft: 8,
     fontFamily: "Poppins-Light",
@@ -255,10 +253,9 @@ const styles = StyleSheet.create({
     elevation: 1, // Required for Android shadows
     borderRadius: 20, // Ensure smooth shadow edges
   },
-  label:{ fontSize: 17, fontFamily:'Poppins-Light' }
+  label:{ fontSize: moderateScale(17), fontFamily:'Poppins-Light' }
 
 });
 
 
 export default HospitalCaseCard;
-
