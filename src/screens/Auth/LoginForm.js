@@ -23,7 +23,7 @@ import {useMutation} from '@tanstack/react-query';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {loginReducer, logoutReducer} from '../../Redux/authSlice';
 import {useDispatch} from 'react-redux';
-import {registerNotificationToken} from '../../components/react-notification'
+import {registerNotificationToken} from '../../components/react-notification';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import icon
 const Link = () => {
   const handlePress = url => Linking.openURL(url);
@@ -42,13 +42,14 @@ const Link = () => {
         <Text style={{color: 'gray', fontSize: 18}}>Forgot password?</Text>
       </TouchableOpacity>
     </View>
-  );PatientDetailForm
+  );
+  PatientDetailForm;
 };
 
 const ShowError = ({errorTextMessage}) => {
   return <Text style={styles.errorMessageStyle}>{errorTextMessage}</Text>;
 };
-const LoginForm = ({navigation}) => {
+const LoginForm = () => {
   const dispatch = useDispatch();
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -65,8 +66,8 @@ const LoginForm = ({navigation}) => {
     },
     onSuccess: data => {
       console.log('Login successful:', data);
-      dispatch(loginReducer(data));
-      registerNotificationToken({type: Platform.OS})
+      dispatch(loginReducer({result:data, isAuthenticated: true}));
+      registerNotificationToken({type: Platform.OS});
     },
     onError: error => {
       console.error('Login failed:', error);
@@ -85,7 +86,7 @@ const LoginForm = ({navigation}) => {
   });
   return (
     <LinearGradient
-      colors={['white', '#a8e2fd']}
+      colors={['white', '#cfddfd']}
       locations={[0, 1]}
       style={[styles.gradient, styles.background]}
       start={{x: 0, y: 0}} // Start from left (0)
@@ -109,7 +110,7 @@ const LoginForm = ({navigation}) => {
                   style={{
                     fontSize: 35,
                     fontFamily: 'Exo2-Italic-VariableFont_wght',
-                    color: 'black',
+                    color: '#2978A0',
                     marginBottom: 5,
                   }}>
                   Welcome Back
@@ -131,8 +132,8 @@ const LoginForm = ({navigation}) => {
                   label="email"
                   placeholder="enter your email"
                   mode="outlined"
-                  outlineColor="#67c9fd"
-                  activeOutlineColor="#67c9fd"
+                  outlineColor="#2978A0"
+                  activeOutlineColor="#2978A0"
                   onBlur={formik.handleBlur('email')}
                   onChangeText={formik.handleChange('email')}
                   style={[styles.textInput, {width: '95%'}]}
@@ -142,14 +143,6 @@ const LoginForm = ({navigation}) => {
                       // Placeholder color
                     },
                   }}
-                  right={
-                    <TextInput.Icon
-                      icon={
-                        formik.values.email && !formik.errors.email && 'check'
-                      }
-                      color="#67c9fd"
-                    />
-                  }
                 />
                 {formik.touched.email && formik.errors.email && (
                   <ShowError errorTextMessage={formik.errors.email} />
@@ -161,8 +154,8 @@ const LoginForm = ({navigation}) => {
                   label="password"
                   mode="outlined"
                   placeholder="enter your password"
-                  outlineColor="#67c9fd"
-                  activeOutlineColor="#67c9fd"
+                  outlineColor="#2978A0"
+                  activeOutlineColor="#2978A0"
                   theme={{
                     colors: {
                       onSurfaceVariant: 'gray',
@@ -185,8 +178,8 @@ const LoginForm = ({navigation}) => {
                 )}
                 <Pressable
                   style={styles.loginButton}
-                    onPress={formik.handleSubmit}>
-                  <Text style={{color: 'black', fontSize: 18}}>Login</Text>
+                  onPress={formik.handleSubmit}>
+                  <Text style={{color: 'white', fontSize: 18}}>Login</Text>
                 </Pressable>
 
                 <Link />
@@ -216,7 +209,7 @@ const styles = StyleSheet.create({
   formContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%',
+    width: '90%',
     marginLeft: 30,
   },
   header: {
@@ -282,7 +275,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '95%',
     height: 50,
-    backgroundColor: '#67c9fd',
+    backgroundColor: '#2978A0',
     marginTop: 20,
     marginBottom: 50,
     borderRadius: 5,

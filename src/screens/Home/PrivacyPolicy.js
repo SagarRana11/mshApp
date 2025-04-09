@@ -1,9 +1,9 @@
 import React from 'react'
-
+import { View, Text } from 'react-native'
 const PrivacyPolicy = () => {
   return (
-    <div>PrivacyPolicy</div>
+    <Text> PrivacyPolicy</Text>
   )
 }
 
-export default PrivacyPolicy;
+export default PrivacyPolicy

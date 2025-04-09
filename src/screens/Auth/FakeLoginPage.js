@@ -5,8 +5,8 @@ import { TextInput } from 'react-native-paper';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
 import { login } from '../../services'
-import { useNavigate } from 'react-router-native';
 import { useMutation } from '@tanstack/react-query';
+import {LinearGradient} from 'react-native-linear-gradient'
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import icon
 const Link =()=>{
   const handlePress=(url)=> Linking.openURL(url);
@@ -32,7 +32,6 @@ const ShowError=({errorTextMessage})=>{
   )
 }
 const LoginFormFake = () => {
-  const navigate = useNavigate();
 
   useEffect(()=>{
     const doesUserExists = async()=>{
@@ -49,6 +48,13 @@ const LoginFormFake = () => {
     }
     doesUserExists()
   },[])
+
+  // useEffect(()=>{
+  //   const logout =async()=>{
+  //     await AsyncStorage.removeItem('loggedUserToken');
+  //   }
+  //   logout()
+  // },[])
 
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -86,10 +92,108 @@ const LoginFormFake = () => {
     },
     validationSchema,
   })
+  return(
+    <LinearGradient
+      colors={['white','#a8e2fd']} 
+      locations={[0, 1]}
+      style={[styles.gradient,styles.background ]}
+      start={{ x: 0, y: 0 }} // Start from left (0)
+      end={{ x: 1, y: 0 }}   // End at right (1)
+    >
+      <KeyboardAvoidingView style={{width:'100%'}}
+         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+
+            <View style={styles.displaylogo}>
+              <Image 
+                  source={require('../../../assets/images/navHeaderLogo.png')}
+                  resizeMode='contain'
+                  style={{width:'120%'}}
+                />
+            </View>   
+            <View style={styles.formContainer}>
+            
+              <View style={styles.welcomeBox}>
+                <Text style={{fontSize:35,fontFamily:'Exo2-Italic-VariableFont_wght', color:'black',marginBottom:5}}>Welcome Back</Text>
+                <Text style={{marginBottom:4, marginBottom:15, fontSize:18, color:'gray'}}>Sign in to continue</Text>
+              </View>
+
+              <View style={styles.loginForm}>
+               
+                <TextInput 
+                  value={formik.values.email}
+                  label='email'
+                  placeholder='enter your email'
+                  mode='outlined'
+                  outlineColor='#67c9fd'
+                  activeOutlineColor="#67c9fd" 
+                  onBlur={formik.handleBlur('email')}
+                  onChangeText={formik.handleChange('email')}
+                  style={[styles.textInput,{width:'95%'}]}
+                  theme={{
+                    colors: {
+                      onSurfaceVariant: 'gray',
+                      // Placeholder color
+                    }
+                  }}
+                  right={
+                    <TextInput.Icon
+                      icon={formik.values.email && !formik.errors.email && "check"}
+                      color='#67c9fd'
+                    />
+                  }
+                />
+                {formik.touched.email && formik.errors.email && <ShowError errorTextMessage={formik.errors.email} />}
+                {/* {emailError && <ShowError errorTextMessage={emailError} />} */}
+
+                <TextInput 
+                  value={formik.values.password}
+                  label='password'
+                  mode='outlined'
+                  placeholder='enter your password'
+                  outlineColor='#67c9fd'
+                  activeOutlineColor="#67c9fd" 
+                  theme={{
+                    colors: {
+                      onSurfaceVariant: 'gray',
+                      // Placeholder color
+                    }
+
+                  }}
+                  onChangeText={formik.handleChange('password')}
+                  style={[styles.textInput,{width:'95%',color:'green'}]}
+                  onBlur={formik.handleBlur('password')}
+                  secureTextEntry={!passwordVisible}
+                  right={
+                    <TextInput.Icon
+                      icon={passwordVisible ? "eye-off" : "eye"}
+                      onPress={() => setPasswordVisible(!passwordVisible)}
+                    />
+                  }
+                /> 
+                {formik.touched.password && formik.errors.password && <ShowError errorTextMessage={formik.errors.password} />}
+                <Pressable style={styles.loginButton} onPress={formik.handleSubmit}>
+                  <Text style={{color:'black', fontSize:18}}>Login</Text>
+                </Pressable>
+
+                <Link/>
+              </View>  
+
+            </View> 
+
+          </View>
+
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+
+    </LinearGradient>
+  )
   
   return (
     <ImageBackground
-      source={require('../../assets/images/imageBack6.jpg')} 
+      source={require('../../../assets/images/imageBack6.jpg')} 
       style={styles.background}
     >
       <KeyboardAvoidingView style={{width:'100%'}}
@@ -100,7 +204,7 @@ const LoginFormFake = () => {
 
             <View style={styles.displaylogo}>
               <Image 
-                  source={require('../../assets/images/navHeaderLogo.png')}
+                  source={require('../../../assets/images/navHeaderLogo.png')}
                   resizeMode='contain'
                   style={{width:'120%'}}
                 />
@@ -187,6 +291,7 @@ const LoginFormFake = () => {
 }
 
 const styles = StyleSheet.create({
+  gradient:{flex:1},
   background: {
     flex: 1,
     resizeMode: 'cover', // cover, contain, stretch
@@ -221,7 +326,7 @@ const styles = StyleSheet.create({
     marginLeft:10,
   }, 
   hospitalName:{
-    fontFamily : 'Exo2-VariableFont_wght',
+    fontFamily : 'Poppins-LightItalic',
     fontWeight:600,
     fontSize: 35,
   },
@@ -264,7 +369,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     width: '95%',
     height:50,
-    backgroundColor: '#2E8B57',
+    backgroundColor: '#67c9fd',
     marginTop:20,
     marginBottom: 50,
     borderRadius: 5,

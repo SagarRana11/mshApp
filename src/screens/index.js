@@ -1,5 +1,3 @@
-import Login from "./Auth/Login";
-import Home from "./Home";
-import FakeLoginForm from "./Auth/FakeLoginPage";
+import LoginForm from "./Auth/LoginForm";
 
-export {Login, Home, FakeLoginForm}
+export {LoginForm}

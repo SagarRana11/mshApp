@@ -1,15 +1,18 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import React from 'react';
-import { NativeRouter, Routes, Route } from 'react-router-native';
-import AllRoutes from './src/routes';
+import {NavigationContainer} from '@react-navigation/native';
+import Main from './src';
+import store from './src/Redux/store';
+import { Provider } from 'react-redux';
 const App = () => {
   return (
-    <NativeRouter>
-       <AllRoutes />
-    </NativeRouter>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Main />
+      </NavigationContainer>
+    </Provider>
   );
 };
 
 export default App;
-

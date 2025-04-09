@@ -1,12 +1,19 @@
 import React, {useEffect, useState} from 'react'
-import { useNavigate } from 'react-router-native'
+import { useNavigation } from '@react-navigation/native'
 import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native'
 import { login } from '../../services'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigation();
+
+  useEffect(()=>{
+    const logout =async()=>{
+      await AsyncStorage.removeItem('loggedUserToken');
+    }
+    logout()
+  },[])
   useEffect(()=>{
     const doesUserExists = async()=>{
       try {
@@ -22,6 +29,8 @@ const Login = () => {
     }
     doesUserExists()
   },[])
+
+
   const handleSubmit =async()=>{
     const loginData = await login({email, password}, navigate);
     // console.log("logindata---------------------------->", loginData);
