@@ -8,8 +8,6 @@ import {REACT_APP_BASE_URL} from '../mshAppServices';
 import 'react-native-get-random-values';
 
 export const raiseRequest = async ({values, uploadResult}) => {
-  console.log('called');
-  console.log('uploadImages', uploadResult);
   let {patientName, dob, phone, medicalContact, location, tolocation} =
     values;
   console.log("petient_name", patientName)  

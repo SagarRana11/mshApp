@@ -9,11 +9,12 @@ import VerifyEmail from '../screens/Auth/VerifyEmail';
 import Profile from '../screens/Home/Profile/Profile';
 import {LoginForm} from '../screens';
 
+import Chat from './Chat/Chat';
 import LogoutForm from '../screens/Auth/LogoutForm';
 import {useSelector, useDispatch} from 'react-redux';
 import Home from '../screens/Home/Home';
 import {RasieAlarm} from './RaiseAlarm';
-import {checkPermission} from './react-notification';
+import {checkPermission} from './react-notification/firebaseSetup';
 import LoadingScreen from './LoaderScreen';
 import {loginReducer} from '../Redux/authSlice';
 import {getUser} from '../utils/tokenServices';
@@ -38,6 +39,9 @@ const HomeStackNavigator = () => (
     />
     <HomeStack.Screen name="ViewPatientDetails" component={ScreenX} />
     <HomeStack.Screen name="ScreenC" component={ScreenC} />
+    <HomeStack.Screen name="Chat" component={Chat}  />
+
+  
   </HomeStack.Navigator>
 );
 

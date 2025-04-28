@@ -1,0 +1,48 @@
+
+{
+  "project_info": {
+    "project_number": "142341065922",
+    "firebase_url": "https://msh-stemi.firebaseio.com",
+    "project_id": "msh-stemi",
+    "storage_bucket": "msh-stemi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142341065922:android:777bfb9f95566cc985ff5b",
+        "android_client_info": {
+          "package_name": "org.mountsinai.stemicathaid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "142341065922-m5qddirst0t1gpj65p6c0crhc60rcsjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsABKxr1pWCPkW5buFKBlWySbAXqdRWjk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "142341065922-m5qddirst0t1gpj65p6c0crhc60rcsjr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "142341065922-uc1c58cq5chatjnudlf2ivik1nd344fn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.msh.calcificaid"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

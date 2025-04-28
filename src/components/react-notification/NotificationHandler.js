@@ -1,32 +1,24 @@
 import React, {useEffect, useMemo} from 'react';
 import firebase from '@react-native-firebase/app';
 import FirebaseMessaging from '@react-native-firebase/messaging';
-// import PushNotification from 'react-native-push-notification';
-
 import emergency_alert from '../../../assets/sound/emergency_alert.mp3'
 import {useNavigation} from '@react-navigation/native';
-
-
 import {View, StyleSheet, Platform, PermissionsAndroid} from 'react-native';
-// import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import Sound from 'react-native-sound';
+import { loadNotificationToken } from './firebaseSetup';
+
 import Snackbar from '../SnackBar';
 import {showSnackBar} from '../SnackBar'
-import Sound from 'react-native-sound';
-
 let whoosh = null;
 
-const NotificationHandler = ({
-  loadNotificationToken,
-}) => {
+const NotificationHandler = () => {
   let messageListener;
   let onTokenRefreshListener;
   let backgroundMessagehandler;
   let notificationOpenedApp;
-  let getInitialNotification;
-  const navigation =useNavigation();
   useEffect(() => {
     const initialSetup = async () => {
-      // await checkPermission();
+      await checkPermission();
       notificationEventListener();
     };
     initialSetup();

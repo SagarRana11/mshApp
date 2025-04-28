@@ -3,6 +3,8 @@ import {View, Text, Button} from 'react-native';
 import checkNotification from '../../../services/checkNotification';
 import fetchUser from '../../../services/fetchUserDetails';
 import {useSelector} from 'react-redux';
+import {DataTable} from 'react-native-paper';
+import Datacell from './Datacell';
 
 import styles from './styles';
 const Profile = () => {
@@ -16,11 +18,11 @@ const Profile = () => {
     phone = '',
   } = user;
   const userDetails = [
-    {key: 'Email', value: email},
-    {key: 'Location', value: fullName},
-    {key: 'Role', value: role},
-    {key: 'Name', value: name},
-    {key: 'Phone', value: phone},
+    {icon:'email',label: 'Email', value: email},
+    {icon:'email',label: 'Location', value: fullName},
+    {icon:'email',label: 'Role', value: role},
+    {icon:'email',label: 'Name', value: name},
+    {icon:'email',label: 'Phone', value: phone},
   ];
 
   console.log('userDetails>>>>', userDetails);
@@ -50,17 +52,27 @@ const Profile = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-        <Text>User Details</Text>
-      {userDetails.map(row => {
+      <Text>User Details</Text>
+      {/* {userDetails.map(row => {
         return (
           <View style={[styles.rowFlexed, styles.row]}>
-            <Text>{row.key}</Text>
+            <Text>{row.label}</Text>
             <Text>{row.value}</Text>
           </View>
         );
+      })} */}
+      {userDetails.map(row=>{
+        return(
+          <View style={[styles.rowFlexed, styles.row]}>
+                     <Datacell detail={row} />
+
+          </View>
+        )
       })}
+     
     </View>
   );
 };
+
 
 export default Profile;

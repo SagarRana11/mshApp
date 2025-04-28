@@ -74,13 +74,13 @@ const fetchRequests = async ({ pageParam = 0 }) => {
     }
   };
 
-  console.log("Fetching requests with:", JSON.stringify(uriProps, null, 2));
+  // console.log("Fetching requests with:", JSON.stringify(uriProps, null, 2));
 
   try {
     const response = await axios.post(`${REACT_APP_BASE_URL}/invoke`, uriProps);
-    console.log("Fetched Data:", JSON.stringify(response.data, null, 2));
+    // console.log("Fetched Data:", JSON.stringify(response.data, null, 2));
     const result = response.data.response?.result ?? [];
-    const nextSkip = result.length === 20 ? pageParam + 20 : undefined;  // Fix: Correct nextSkip calculation
+    const nextSkip = result.length === 20 ? pageParam + 20 : undefined; 
     return { data: result, nextSkip };
   } catch (error) {
     console.error("Error fetching data:", error);

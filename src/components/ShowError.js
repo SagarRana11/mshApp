@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     errorMessageStyle: {
         color: 'red',
         fontSize: 12,
-        marginBottom: verticalScale(5),
       },
 })
 export default ShowError;

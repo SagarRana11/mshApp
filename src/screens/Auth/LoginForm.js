@@ -23,7 +23,7 @@ import {useMutation} from '@tanstack/react-query';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {loginReducer, logoutReducer} from '../../Redux/authSlice';
 import {useDispatch} from 'react-redux';
-import {registerNotificationToken} from '../../components/react-notification';
+import {registerNotificationToken} from '../../components/react-notification/firebaseSetup';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import icon
 const Link = () => {
   const handlePress = url => Linking.openURL(url);
@@ -65,6 +65,7 @@ const LoginForm = () => {
       return await login(values); // Call your login API
     },
     onSuccess: data => {
+      
       console.log('Login successful:', data);
       dispatch(loginReducer({result:data, isAuthenticated: true}));
       registerNotificationToken({type: Platform.OS});

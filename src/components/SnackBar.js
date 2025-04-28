@@ -114,26 +114,6 @@ const SnackBar = ({id = null}) => {
 
     const animatedValue = position === 'top' ? top : bottom;
 
-    try {
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 0,
-          duration: animationTime,
-          useNativeDriver: false,
-        }),
-        Animated.delay(duration),
-        Animated.timing(animatedValue, {
-          toValue: -1 * height,
-          duration: animationTime,
-          useNativeDriver: false,
-        }),
-      ]).start(() => onSwipe && onSwipe());
-    } catch (error) {
-      console.error(error)
-    }
-
-   
-
     timeoutRef.current = setTimeout(() => {
       setSnackBarStyle({opacity: 1, left: 0, top: 0});
       setSnackBarData(prev => ({...prev, show: false}));

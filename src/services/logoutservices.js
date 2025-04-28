@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {removeUserInfoOnServer} from '../components/react-notification'
+import {removeUserInfoOnServer} from '../components/react-notification/firebaseSetup'
 import store from '../Redux/store';
 import {removeNotificationReducer} from '../Redux/notificationSlice'
 import { deletUser } from '../utils/tokenServices';
